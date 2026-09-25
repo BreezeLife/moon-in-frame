@@ -42,7 +42,8 @@ export default {
     language: 'zh', title: CONTENT.zh.title,
     startLabel: CONTENT.zh.start, phase: 'home', countdown: '3',
     showHome: true, showCountdown: false, showScene: false, showFirst: false, showPoem: false,
-    showSecond: false, showGreeting: false, moonClass: 'moonlight', poemClass: ''
+    showSecond: false, showGreeting: false, moonClass: 'moonlight', poemClass: '',
+    zhClass: 'language-selected', jaClass: '', koClass: '', greetingClass: 'greeting-zh'
   }, poemFields(CONTENT.zh)),
 
   onLoad() {
@@ -70,7 +71,13 @@ export default {
   setLanguage(language) {
     if (this.data.phase !== 'home') return;
     const content = CONTENT[language];
-    this.setData(Object.assign({ language, title: content.title, startLabel: content.start }, poemFields(content)));
+    this.setData(Object.assign({
+      language, title: content.title, startLabel: content.start,
+      zhClass: language === 'zh' ? 'language-selected' : '',
+      jaClass: language === 'ja' ? 'language-selected' : '',
+      koClass: language === 'ko' ? 'language-selected' : '',
+      greetingClass: 'greeting-' + language
+    }, poemFields(content)));
   },
 
   cycleLanguage(step) {
@@ -191,17 +198,29 @@ export default {
     </view>
 
     <view class="landscape" ink:if="{{showScene}}">
+      <view class="pixel-stars stars-far"></view>
       <view class="pixel-stars stars-a"></view>
       <view class="pixel-stars stars-b"></view>
       <view class="pixel-stars stars-c"></view>
       <view class="meteor meteor-a"></view>
       <view class="meteor meteor-b"></view>
       <view class="meteor meteor-c"></view>
-      <view class="pixel-mountain mountain-back"></view>
-      <view class="pixel-mountain mountain-front"></view>
-      <view class="water water-one"></view>
-      <view class="water water-two"></view>
-      <view class="water water-three"></view>
+      <view class="ridge ridge-far"></view>
+      <view class="ridge ridge-left"></view>
+      <view class="ridge ridge-right"></view>
+      <view class="shore shore-left"></view>
+      <view class="shore shore-right"></view>
+      <view class="water water-a"></view>
+      <view class="water water-b"></view>
+      <view class="water water-c"></view>
+      <view class="water water-d"></view>
+      <view class="water water-e"></view>
+      <view class="water water-f"></view>
+      <view class="water water-g"></view>
+      <view class="water water-h"></view>
+      <view class="reflection reflection-a"></view>
+      <view class="reflection reflection-b"></view>
+      <view class="reflection reflection-c"></view>
     </view>
 
     <view class="poem {{poemClass}}" ink:if="{{showPoem}}">
@@ -249,7 +268,7 @@ export default {
       </view>
     </view>
 
-    <view class="closing" ink:if="{{showGreeting}}">
+    <view class="closing {{greetingClass}}" ink:if="{{showGreeting}}">
       <view class="poem-column greeting-column">
         <text class="greeting-char" ink:if="{{greeting1_1}}">{{greeting1_1}}</text>
         <text class="greeting-char" ink:if="{{greeting1_2}}">{{greeting1_2}}</text>
@@ -328,8 +347,8 @@ button {
 .countdown-screen {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 190px;
+  left: -145px;
+  width: 480px;
   height: 352px;
   background-color: #000000;
   z-index: 5;
@@ -337,14 +356,15 @@ button {
 
 .landscape {
   position: absolute;
-  top: 205px;
-  left: 0;
-  width: 190px;
+  top: 0;
+  left: -145px;
+  width: 480px;
   height: 352px;
   overflow: hidden;
-  image-rendering: pixelated;
+  opacity: 0;
+  animation: scene-in 1000ms steps(5, end) forwards;
 }
-.moon-progress { position: absolute; top: 164px; left: 9px; width: 172px; height: 29px; display: block; }
+.moon-progress { position: absolute; top: 164px; left: 154px; width: 172px; height: 29px; display: block; }
 .orb { position: absolute; top: 0; width: 25px; height: 25px; border: 2px solid rgba(89,255,120,.76); border-radius: 50%; image-rendering: pixelated; opacity: .12; animation: orb-fill 3s steps(4, end) forwards; }
 .orb-one { left: 0; }
 .orb-two { left: 36px; }
@@ -361,39 +381,51 @@ button {
 .orb-four { background: rgba(89,255,120,.82); }
 .pixel-stars {
   position: absolute;
-  width: 3px;
-  height: 3px;
-  background-color: rgba(89, 255, 120, 0.75);
-  box-shadow: 18px 22px rgba(89,255,120,.42), 48px 44px rgba(89,255,120,.52), 82px 13px rgba(89,255,120,.34), 119px 55px rgba(89,255,120,.45), 153px 28px rgba(89,255,120,.3), 177px 72px rgba(89,255,120,.4), 214px 36px rgba(89,255,120,.35), 252px 84px rgba(89,255,120,.44), 296px 19px rgba(89,255,120,.28), 334px 61px rgba(89,255,120,.4), 377px 31px rgba(89,255,120,.35), 421px 96px rgba(89,255,120,.46);
-  animation: pixel-twinkle 3.8s steps(2, end) infinite;
+  width: 2px;
+  height: 2px;
+  background-color: rgba(89,255,120,.62);
+  box-shadow: 19px 28px rgba(89,255,120,.38), 47px 69px rgba(89,255,120,.35), 84px 14px rgba(89,255,120,.46), 116px 91px rgba(89,255,120,.28), 152px 39px rgba(89,255,120,.48), 179px 72px rgba(89,255,120,.36), 218px 25px rgba(89,255,120,.55), 251px 87px rgba(89,255,120,.38), 283px 12px rgba(89,255,120,.32), 319px 59px rgba(89,255,120,.44), 352px 32px rgba(89,255,120,.3), 387px 98px rgba(89,255,120,.4), 423px 43px rgba(89,255,120,.54), 450px 74px rgba(89,255,120,.3);
+  animation: pixel-twinkle 4s steps(3, end) infinite;
 }
-.stars-a { top: 19px; left: 7px; }
-.stars-b { top: 63px; left: 25px; opacity: .55; transform: scale(.66); }
-.stars-c { top: 142px; left: -145px; opacity: .42; transform: scale(.72); }
-.meteor { position: absolute; width: 24px; height: 3px; background-color: rgba(89,255,120,.7); transform: rotate(28deg); transform-origin: right center; animation: meteor-fall 4.8s steps(5, end) infinite; }
-.meteor-a { top: 31px; left: 75px; }
-.meteor-b { top: 68px; left: 235px; animation-delay: 1.7s; transform: scale(.7) rotate(28deg); }
-.meteor-c { top: 12px; left: 350px; animation-delay: 3.1s; transform: scale(.55) rotate(28deg); }
-.pixel-mountain {
+.stars-far { top: 16px; left: 10px; opacity: .38; animation-delay: 1.7s; }
+.stars-a { top: 45px; left: 15px; }
+.stars-b { top: 111px; left: 33px; opacity: .52; animation-delay: .9s; }
+.stars-c { top: 178px; left: 6px; opacity: .4; animation-delay: 2.2s; }
+.meteor {
   position: absolute;
-  height: 3px;
-  background-color: rgba(89,255,120,.28);
-  box-shadow: 8px -5px rgba(89,255,120,.28), 16px -10px rgba(89,255,120,.28), 24px -15px rgba(89,255,120,.28), 32px -10px rgba(89,255,120,.28), 40px -5px rgba(89,255,120,.28), 48px 0 rgba(89,255,120,.28), 56px -7px rgba(89,255,120,.28), 64px -14px rgba(89,255,120,.28), 72px -7px rgba(89,255,120,.28), 80px 0 rgba(89,255,120,.28);
+  width: 5px;
+  height: 5px;
+  background-color: rgba(89,255,120,.85);
+  box-shadow: 5px -5px rgba(89,255,120,.62), 10px -10px rgba(89,255,120,.42), 15px -15px rgba(89,255,120,.22);
+  opacity: 0;
+  animation: meteor-fall 5.2s steps(7, end) infinite;
 }
-.mountain-back { left: 7px; top: 101px; width: 88px; opacity: .5; }
-.mountain-front { right: 4px; top: 112px; width: 98px; opacity: .75; transform: scale(.82); }
-.water {
-  position: absolute;
-  height: 1px;
-  background-color: rgba(89, 255, 120, 0.19);
-}
-.water-one { top: 120px; left: 62px; width: 68px; }
-.water-two { top: 128px; left: 78px; width: 36px; }
-.water-three { top: 136px; left: 84px; width: 26px; }
-.water-one, .water-two, .water-three { box-shadow: 6px 3px rgba(89,255,120,.18), 15px -2px rgba(89,255,120,.22), 29px 4px rgba(89,255,120,.16); }
+.meteor-a { top: 49px; left: 99px; }
+.meteor-b { top: 116px; left: 367px; animation-delay: 1.8s; }
+.meteor-c { top: 90px; left: 257px; animation-delay: 3.5s; }
+.ridge { position: absolute; height: 6px; background-color: rgba(89,255,120,.27); }
+.ridge-far { top: 276px; left: 94px; width: 64px; box-shadow: 8px -6px rgba(89,255,120,.22), 16px -12px rgba(89,255,120,.22), 24px -12px rgba(89,255,120,.22), 32px -6px rgba(89,255,120,.22), 88px 0 rgba(89,255,120,.22), 96px -6px rgba(89,255,120,.22), 104px -12px rgba(89,255,120,.22), 112px -6px rgba(89,255,120,.22); }
+.ridge-left { top: 285px; left: 0; width: 76px; box-shadow: 16px -6px rgba(89,255,120,.32), 32px -12px rgba(89,255,120,.32), 48px -18px rgba(89,255,120,.32), 64px -24px rgba(89,255,120,.32), 80px -18px rgba(89,255,120,.32), 96px -12px rgba(89,255,120,.32), 112px -6px rgba(89,255,120,.32); }
+.ridge-right { top: 285px; right: 0; width: 76px; box-shadow: -16px -6px rgba(89,255,120,.32), -32px -12px rgba(89,255,120,.32), -48px -18px rgba(89,255,120,.32), -64px -12px rgba(89,255,120,.32), -80px -6px rgba(89,255,120,.32); }
+.shore { position: absolute; top: 292px; height: 3px; background-color: rgba(89,255,120,.2); }
+.shore-left { left: 0; width: 145px; }
+.shore-right { right: 0; width: 128px; }
+.water { position: absolute; height: 3px; background-color: rgba(89,255,120,.27); }
+.water-a { top: 296px; left: 187px; width: 74px; }
+.water-b { top: 304px; left: 155px; width: 40px; }
+.water-c { top: 310px; left: 219px; width: 92px; }
+.water-d { top: 319px; left: 72px; width: 84px; }
+.water-e { top: 324px; left: 331px; width: 64px; }
+.water-f { top: 333px; left: 179px; width: 112px; }
+.water-g { top: 342px; left: 31px; width: 48px; }
+.water-h { top: 346px; left: 384px; width: 70px; }
+.reflection { position: absolute; height: 3px; background-color: rgba(89,255,120,.47); }
+.reflection-a { top: 301px; left: 226px; width: 28px; }
+.reflection-b { top: 316px; left: 213px; width: 53px; }
+.reflection-c { top: 337px; left: 235px; width: 21px; }
 .poem {
   position: absolute;
-  top: 151px;
+  top: 102px;
   left: 0;
   width: 190px;
   display: flex;
@@ -455,6 +487,8 @@ button {
 .closing .poem-column { width: auto; flex-direction: row; }
 .greeting-char { width: 30px; font-size: 22px; font-family: 'STXingkai', 'Xingkai SC', 'FZKai-Z03', serif; }
 .closing .greeting-char { font-size: 28px; width: 36px; }
+.greeting-ja .greeting-char, .greeting-ko .greeting-char { font-size: 22px; width: 25px; }
+.greeting-ko { flex-direction: column; align-items: center; }
 .closing .char { font-size: 21px; }
 .closing .char { animation-duration: 280ms; }
 .closing .char-1 { animation-delay: 0ms; }
@@ -471,14 +505,14 @@ button {
 .closing .greeting-wrap .char-4 { animation-delay: 1080ms; }
 .closing .greeting-wrap .char-5 { animation-delay: 1260ms; }
 
-@keyframes light-rise {
-  from { opacity: 0; height: 15px; }
-  to { opacity: 1; height: 77px; }
-}
 @keyframes meteor-fall {
-  0%, 65%, 100% { opacity: 0; transform: translate(0, 0) rotate(28deg); }
-  72% { opacity: .85; }
-  86% { opacity: 0; transform: translate(-18px, 14px) rotate(28deg); }
+  0%, 61%, 100% { opacity: 0; transform: translate(0, 0); }
+  67% { opacity: .85; }
+  82% { opacity: 0; transform: translate(-24px, 24px); }
+}
+@keyframes scene-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 @keyframes character-in {
   from { opacity: 0; transform: translateY(5px); }
