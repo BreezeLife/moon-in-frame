@@ -150,7 +150,7 @@ export default {
       showGreeting: phase === 'closing' || phase === 'finished',
       moonClass: 'moonlight moonlight-rise', poemClass: phase === 'closing' ? 'poem-fade' : ''
     });
-    if (phase === 'closing') this._poemFadeTimer = setTimeout(() => this.setData({ showPoem: false }), 900);
+    if (phase === 'closing') this.setData({ showPoem: false });
     if (phase === 'countdown') this.tickCountdown();
     else if (PHASE_LENGTH[phase]) {
       this._phaseTimer = setTimeout(() => this.nextPhase(), PHASE_LENGTH[phase]);
@@ -193,6 +193,7 @@ export default {
     <view class="landscape" ink:if="{{showScene}}">
       <view class="pixel-stars stars-a"></view>
       <view class="pixel-stars stars-b"></view>
+      <view class="pixel-stars stars-c"></view>
       <view class="pixel-mountain mountain-back"></view>
       <view class="pixel-mountain mountain-front"></view>
       <view class="water water-one"></view>
@@ -284,7 +285,7 @@ export default {
   width: 190px;
   height: 100%;
   margin: 0 auto;
-  overflow: hidden;
+  overflow: visible;
   text-align: center;
 }
 
@@ -361,11 +362,12 @@ button {
   width: 3px;
   height: 3px;
   background-color: rgba(89, 255, 120, 0.75);
-  box-shadow: 18px 22px rgba(89,255,120,.42), 48px 44px rgba(89,255,120,.52), 82px 13px rgba(89,255,120,.34), 119px 55px rgba(89,255,120,.45), 153px 28px rgba(89,255,120,.3), 177px 72px rgba(89,255,120,.4);
+  box-shadow: 18px 22px rgba(89,255,120,.42), 48px 44px rgba(89,255,120,.52), 82px 13px rgba(89,255,120,.34), 119px 55px rgba(89,255,120,.45), 153px 28px rgba(89,255,120,.3), 177px 72px rgba(89,255,120,.4), 214px 36px rgba(89,255,120,.35), 252px 84px rgba(89,255,120,.44), 296px 19px rgba(89,255,120,.28), 334px 61px rgba(89,255,120,.4), 377px 31px rgba(89,255,120,.35), 421px 96px rgba(89,255,120,.46);
   animation: pixel-twinkle 3.8s steps(2, end) infinite;
 }
 .stars-a { top: 19px; left: 7px; }
 .stars-b { top: 63px; left: 25px; opacity: .55; transform: scale(.66); }
+.stars-c { top: 142px; left: -145px; opacity: .42; transform: scale(.72); }
 .pixel-mountain {
   position: absolute;
   height: 3px;
