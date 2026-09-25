@@ -165,6 +165,10 @@ export default {
     <text class="countdown" ink:if="{{showCountdown}}">{{countdown}}</text>
 
     <view class="landscape" ink:if="{{showFirst}}">
+      <view class="pixel-stars stars-a"></view>
+      <view class="pixel-stars stars-b"></view>
+      <view class="pixel-mountain mountain-back"></view>
+      <view class="pixel-mountain mountain-front"></view>
       <view class="horizon horizon-back"></view>
       <view class="horizon horizon-front"></view>
       <view class="water water-one"></view>
@@ -274,9 +278,11 @@ export default {
 
 .language-row {
   display: flex;
+  flex-direction: column;
   width: 190px;
-  justify-content: space-between;
-  margin-top: 42px;
+  align-items: center;
+  margin-top: 34px;
+  gap: 8px;
 }
 
 button {
@@ -288,8 +294,8 @@ button {
   font-size: 12px;
 }
 
-.language { width: 60px; height: 30px; }
-.start { width: 92px; height: 34px; margin-top: 36px; }
+.language { width: 150px; height: 38px; font-size: 15px; }
+.start { width: 110px; height: 36px; margin-top: 28px; font-size: 14px; }
 
 .countdown {
   position: absolute;
@@ -307,7 +313,25 @@ button {
   width: 190px;
   height: 352px;
   overflow: hidden;
+  image-rendering: pixelated;
 }
+.pixel-stars {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background-color: rgba(89, 255, 120, 0.75);
+  box-shadow: 18px 22px rgba(89,255,120,.42), 48px 44px rgba(89,255,120,.52), 82px 13px rgba(89,255,120,.34), 119px 55px rgba(89,255,120,.45), 153px 28px rgba(89,255,120,.3), 177px 72px rgba(89,255,120,.4);
+}
+.stars-a { top: 19px; left: 7px; }
+.stars-b { top: 63px; left: 25px; opacity: .55; transform: scale(.66); }
+.pixel-mountain {
+  position: absolute;
+  height: 3px;
+  background-color: rgba(89,255,120,.28);
+  box-shadow: 8px -5px rgba(89,255,120,.28), 16px -10px rgba(89,255,120,.28), 24px -15px rgba(89,255,120,.28), 32px -10px rgba(89,255,120,.28), 40px -5px rgba(89,255,120,.28), 48px 0 rgba(89,255,120,.28), 56px -7px rgba(89,255,120,.28), 64px -14px rgba(89,255,120,.28), 72px -7px rgba(89,255,120,.28), 80px 0 rgba(89,255,120,.28);
+}
+.mountain-back { left: 7px; top: 101px; width: 88px; opacity: .5; }
+.mountain-front { right: 4px; top: 112px; width: 98px; opacity: .75; transform: scale(.82); }
 .horizon {
   position: absolute;
   width: 130px;
@@ -325,14 +349,15 @@ button {
 .water-one { top: 120px; left: 62px; width: 68px; }
 .water-two { top: 128px; left: 78px; width: 36px; }
 .water-three { top: 136px; left: 84px; width: 26px; }
+.water-one, .water-two, .water-three { box-shadow: 6px 3px rgba(89,255,120,.18), 15px -2px rgba(89,255,120,.22), 29px 4px rgba(89,255,120,.16); }
 .moonlight {
   position: absolute;
   top: 21px;
   left: 94px;
-  width: 1px;
+  width: 3px;
   height: 77px;
   background-color: rgba(89, 255, 120, 0.68);
-  transform: rotate(12deg);
+  box-shadow: 5px 8px rgba(89,255,120,.55), -5px 18px rgba(89,255,120,.42), 6px 33px rgba(89,255,120,.5), -4px 49px rgba(89,255,120,.38);
 }
 .moonlight-rise { animation: light-rise 5s ease-out both; }
 .moonlight-glow { box-shadow: 0 0 8px rgba(89, 255, 120, 0.45); }
@@ -366,7 +391,7 @@ button {
   line-height: 22px;
   text-align: center;
   font-size: 18px;
-  font-family: 'Kaiti SC', 'STKaiti', 'KaiTi', 'Songti SC', serif;
+  font-family: 'STXingkai', 'Xingkai SC', 'FZKai-Z03', 'Kaiti SC', 'STKaiti', serif;
   animation: character-in 250ms ease-out both;
 }
 .char-1 { animation-delay: 0ms; }
