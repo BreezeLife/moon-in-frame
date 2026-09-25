@@ -72,6 +72,13 @@ export default {
     this.setData(Object.assign({ language, title: content.title, startLabel: content.start }, poemFields(content)));
   },
 
+  cycleLanguage(step) {
+    if (this.data.phase !== 'home') return;
+    const languages = ['zh', 'ja', 'ko'];
+    const current = languages.indexOf(this.data.language);
+    this.setLanguage(languages[(current + step + languages.length) % languages.length]);
+  },
+
   startExperience() {
     if (this.data.phase !== 'home') return;
     this.enterPhase('countdown');
@@ -92,6 +99,16 @@ export default {
   },
 
   onKeyUp(event) {
+    if (event && event.code === 'ArrowUp') {
+      if (typeof event.preventDefault === 'function') event.preventDefault();
+      this.cycleLanguage(-1);
+      return;
+    }
+    if (event && event.code === 'ArrowDown') {
+      if (typeof event.preventDefault === 'function') event.preventDefault();
+      this.cycleLanguage(1);
+      return;
+    }
     if (event && event.code === 'Enter') {
       if (typeof event.preventDefault === 'function') event.preventDefault();
       this.handleTap();
@@ -125,7 +142,7 @@ export default {
       countdown: '3',
       showHome: false,
       showCountdown: phase === 'countdown',
-      showFirst: phase === 'first' || phase === 'second',
+      showFirst: phase === 'first' || phase === 'second' || phase === 'closing' || phase === 'finished',
       showSecond: phase === 'second',
       showGreeting: phase === 'closing' || phase === 'finished',
       moonClass: phase === 'second' ? 'moonlight moonlight-glow' : 'moonlight moonlight-rise'
@@ -321,6 +338,7 @@ button {
   height: 3px;
   background-color: rgba(89, 255, 120, 0.75);
   box-shadow: 18px 22px rgba(89,255,120,.42), 48px 44px rgba(89,255,120,.52), 82px 13px rgba(89,255,120,.34), 119px 55px rgba(89,255,120,.45), 153px 28px rgba(89,255,120,.3), 177px 72px rgba(89,255,120,.4);
+  animation: pixel-twinkle 3.8s steps(2, end) infinite;
 }
 .stars-a { top: 19px; left: 7px; }
 .stars-b { top: 63px; left: 25px; opacity: .55; transform: scale(.66); }
@@ -390,7 +408,7 @@ button {
   height: 22px;
   line-height: 22px;
   text-align: center;
-  font-size: 18px;
+  font-size: 22px;
   font-family: 'STXingkai', 'Xingkai SC', 'FZKai-Z03', 'Kaiti SC', 'STKaiti', serif;
   animation: character-in 250ms ease-out both;
 }
@@ -413,13 +431,14 @@ button {
 
 .closing {
   position: absolute;
-  top: 151px;
+  top: 286px;
   left: 0;
   width: 190px;
   display: flex;
   flex-direction: row-reverse;
   justify-content: center;
 }
+.closing .char { font-size: 21px; }
 .closing .char { animation-duration: 280ms; }
 .closing .char-1 { animation-delay: 0ms; }
 .closing .char-2 { animation-delay: 180ms; }
@@ -442,5 +461,10 @@ button {
 @keyframes character-in {
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; }
+}
+@keyframes pixel-twinkle {
+  0%, 100% { opacity: .42; }
+  48% { opacity: .9; }
+  52% { opacity: .55; }
 }
 </style>
