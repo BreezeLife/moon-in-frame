@@ -194,12 +194,14 @@ export default {
       <view class="pixel-stars stars-a"></view>
       <view class="pixel-stars stars-b"></view>
       <view class="pixel-stars stars-c"></view>
+      <view class="meteor meteor-a"></view>
+      <view class="meteor meteor-b"></view>
+      <view class="meteor meteor-c"></view>
       <view class="pixel-mountain mountain-back"></view>
       <view class="pixel-mountain mountain-front"></view>
       <view class="water water-one"></view>
       <view class="water water-two"></view>
       <view class="water water-three"></view>
-      <view class="{{moonClass}}"></view>
     </view>
 
     <view class="poem {{poemClass}}" ink:if="{{showPoem}}">
@@ -335,7 +337,7 @@ button {
 
 .landscape {
   position: absolute;
-  top: 0;
+  top: 205px;
   left: 0;
   width: 190px;
   height: 352px;
@@ -368,6 +370,10 @@ button {
 .stars-a { top: 19px; left: 7px; }
 .stars-b { top: 63px; left: 25px; opacity: .55; transform: scale(.66); }
 .stars-c { top: 142px; left: -145px; opacity: .42; transform: scale(.72); }
+.meteor { position: absolute; width: 24px; height: 3px; background-color: rgba(89,255,120,.7); transform: rotate(28deg); transform-origin: right center; animation: meteor-fall 4.8s steps(5, end) infinite; }
+.meteor-a { top: 31px; left: 75px; }
+.meteor-b { top: 68px; left: 235px; animation-delay: 1.7s; transform: scale(.7) rotate(28deg); }
+.meteor-c { top: 12px; left: 350px; animation-delay: 3.1s; transform: scale(.55) rotate(28deg); }
 .pixel-mountain {
   position: absolute;
   height: 3px;
@@ -385,18 +391,6 @@ button {
 .water-two { top: 128px; left: 78px; width: 36px; }
 .water-three { top: 136px; left: 84px; width: 26px; }
 .water-one, .water-two, .water-three { box-shadow: 6px 3px rgba(89,255,120,.18), 15px -2px rgba(89,255,120,.22), 29px 4px rgba(89,255,120,.16); }
-.moonlight {
-  position: absolute;
-  top: 21px;
-  left: 94px;
-  width: 3px;
-  height: 77px;
-  background-color: rgba(89, 255, 120, 0.68);
-  box-shadow: 5px 8px rgba(89,255,120,.55), -5px 18px rgba(89,255,120,.42), 6px 33px rgba(89,255,120,.5), -4px 49px rgba(89,255,120,.38);
-}
-.moonlight-rise { animation: light-rise 5s ease-out both; }
-.moonlight-glow { box-shadow: 0 0 8px rgba(89, 255, 120, 0.45); }
-
 .poem {
   position: absolute;
   top: 151px;
@@ -480,6 +474,11 @@ button {
 @keyframes light-rise {
   from { opacity: 0; height: 15px; }
   to { opacity: 1; height: 77px; }
+}
+@keyframes meteor-fall {
+  0%, 65%, 100% { opacity: 0; transform: translate(0, 0) rotate(28deg); }
+  72% { opacity: .85; }
+  86% { opacity: 0; transform: translate(-18px, 14px) rotate(28deg); }
 }
 @keyframes character-in {
   from { opacity: 0; transform: translateY(5px); }
