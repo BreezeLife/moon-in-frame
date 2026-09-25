@@ -204,6 +204,7 @@ export default {
     <view class="poem {{poemClass}}" ink:if="{{showPoem}}">
       <view class="poem-column first-column">
         <text class="char char-1" ink:if="{{first1_1}}">{{first1_1}}</text>
+        <text class="char char-2" ink:if="{{first1_2}}">{{first1_2}}</text>
         <text class="char char-3" ink:if="{{first1_3}}">{{first1_3}}</text>
         <text class="char char-4" ink:if="{{first1_4}}">{{first1_4}}</text>
         <text class="char char-5" ink:if="{{first1_5}}">{{first1_5}}</text>
@@ -340,8 +341,13 @@ button {
   overflow: hidden;
   image-rendering: pixelated;
 }
-.moon-progress { position: absolute; top: 164px; left: 12px; display: flex; gap: 7px; }
-.orb { width: 25px; height: 25px; border: 2px solid rgba(89,255,120,.76); border-radius: 50%; image-rendering: pixelated; opacity: .12; animation: orb-fill 3s steps(4, end) forwards; }
+.moon-progress { position: absolute; top: 164px; left: 9px; width: 172px; height: 29px; display: block; }
+.orb { position: absolute; top: 0; width: 25px; height: 25px; border: 2px solid rgba(89,255,120,.76); border-radius: 50%; image-rendering: pixelated; opacity: .12; animation: orb-fill 3s steps(4, end) forwards; }
+.orb-one { left: 0; }
+.orb-two { left: 36px; }
+.orb-three { left: 72px; }
+.orb-four { left: 108px; }
+.orb-five { left: 144px; }
 .orb-two { animation-delay: .45s; }
 .orb-three { animation-delay: .9s; }
 .orb-four { animation-delay: 1.35s; }
@@ -441,7 +447,7 @@ button {
 
 .closing {
   position: absolute;
-  top: 286px;
+  top: 182px;
   left: 0;
   width: 190px;
   display: flex;
@@ -452,6 +458,7 @@ button {
 }
 .closing .poem-column { width: auto; flex-direction: row; }
 .greeting-char { width: 30px; font-size: 22px; font-family: 'STXingkai', 'Xingkai SC', 'FZKai-Z03', serif; }
+.closing .greeting-char { font-size: 28px; width: 36px; }
 .closing .char { font-size: 21px; }
 .closing .char { animation-duration: 280ms; }
 .closing .char-1 { animation-delay: 0ms; }
