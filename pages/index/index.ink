@@ -41,7 +41,7 @@ export default {
   data: Object.assign({
     language: 'zh', title: CONTENT.zh.title,
     startLabel: CONTENT.zh.start, phase: 'home', countdown: '3',
-    showHome: true, showCountdown: false, showFirst: false, showPoem: false,
+    showHome: true, showCountdown: false, showScene: false, showFirst: false, showPoem: false,
     showSecond: false, showGreeting: false, moonClass: 'moonlight', poemClass: ''
   }, poemFields(CONTENT.zh)),
 
@@ -58,6 +58,7 @@ export default {
   clearTimers() {
     if (this._phaseTimer) clearTimeout(this._phaseTimer);
     if (this._tapTimer) clearTimeout(this._tapTimer);
+    if (this._poemFadeTimer) clearTimeout(this._poemFadeTimer);
     this._phaseTimer = null;
     this._tapTimer = null;
   },
@@ -119,7 +120,7 @@ export default {
     this.clearTimers();
     this.setData({
       phase: 'home', countdown: '3', showHome: true,
-      showCountdown: false, showFirst: false, showPoem: false, showSecond: false,
+      showCountdown: false, showScene: false, showFirst: false, showPoem: false, showSecond: false,
       showGreeting: false, moonClass: 'moonlight', poemClass: ''
     });
   },
@@ -142,12 +143,14 @@ export default {
       countdown: '3',
       showHome: false,
       showCountdown: phase === 'countdown',
+      showScene: phase !== 'countdown' && phase !== 'home',
       showFirst: phase !== 'home',
       showPoem: phase === 'first' || phase === 'second' || phase === 'closing',
       showSecond: phase === 'second',
       showGreeting: phase === 'closing' || phase === 'finished',
       moonClass: 'moonlight moonlight-rise', poemClass: phase === 'closing' ? 'poem-fade' : ''
     });
+    if (phase === 'closing') this._poemFadeTimer = setTimeout(() => this.setData({ showPoem: false }), 900);
     if (phase === 'countdown') this.tickCountdown();
     else if (PHASE_LENGTH[phase]) {
       this._phaseTimer = setTimeout(() => this.nextPhase(), PHASE_LENGTH[phase]);
@@ -173,26 +176,25 @@ export default {
     <view class="home" ink:if="{{showHome}}">
       <text class="title">{{title}}</text>
       <view class="language-row">
-        <button class="language" catchtap="selectZh">中文</button>
-        <button class="language" catchtap="selectJa">日本語</button>
-        <button class="language" catchtap="selectKo">한국어</button>
+        <button class="language {{zhClass}}" catchtap="selectZh">中文</button>
+        <button class="language {{jaClass}}" catchtap="selectJa">日本語</button>
+        <button class="language {{koClass}}" catchtap="selectKo">한국어</button>
       </view>
       <button class="start" catchtap="startExperience">{{startLabel}}</button>
     </view>
 
-    <text class="countdown" ink:if="{{showCountdown}}">{{countdown}}</text>
-
-    <view class="landscape" ink:if="{{showFirst}}">
-      <view class="moon-progress" ink:if="{{showCountdown}}">
+    <view class="countdown-screen" ink:if="{{showCountdown}}">
+      <view class="moon-progress">
         <view class="orb orb-one"></view><view class="orb orb-two"></view>
-        <view class="orb orb-three"></view><view class="orb orb-four"></view>
+        <view class="orb orb-three"></view><view class="orb orb-four"></view><view class="orb orb-five"></view>
       </view>
+    </view>
+
+    <view class="landscape" ink:if="{{showScene}}">
       <view class="pixel-stars stars-a"></view>
       <view class="pixel-stars stars-b"></view>
       <view class="pixel-mountain mountain-back"></view>
       <view class="pixel-mountain mountain-front"></view>
-      <view class="horizon horizon-back"></view>
-      <view class="horizon horizon-front"></view>
       <view class="water water-one"></view>
       <view class="water water-two"></view>
       <view class="water water-three"></view>
@@ -202,7 +204,6 @@ export default {
     <view class="poem {{poemClass}}" ink:if="{{showPoem}}">
       <view class="poem-column first-column">
         <text class="char char-1" ink:if="{{first1_1}}">{{first1_1}}</text>
-        <text class="char char-2" ink:if="{{first1_2}}">{{first1_2}}</text>
         <text class="char char-3" ink:if="{{first1_3}}">{{first1_3}}</text>
         <text class="char char-4" ink:if="{{first1_4}}">{{first1_4}}</text>
         <text class="char char-5" ink:if="{{first1_5}}">{{first1_5}}</text>
@@ -296,7 +297,7 @@ export default {
   align-items: center;
 }
 
-.title { font-size: 25px; line-height: 34px; }
+.title { font-size: 25px; line-height: 34px; font-family: 'STXingkai', 'Xingkai SC', 'FZKai-Z03', 'Kaiti SC', serif; }
 
 .language-row {
   display: flex;
@@ -317,15 +318,17 @@ button {
 }
 
 .language { width: 150px; height: 38px; font-size: 15px; }
+.language-selected { color: #07140a; background-color: #59ff78; box-shadow: 0 0 0 2px rgba(89,255,120,.35); }
 .start { width: 110px; height: 36px; margin-top: 28px; font-size: 14px; }
 
-.countdown {
+.countdown-screen {
   position: absolute;
-  top: 145px;
+  top: 0;
   left: 0;
   width: 190px;
-  font-size: 36px;
-  line-height: 52px;
+  height: 352px;
+  background-color: #000000;
+  z-index: 5;
 }
 
 .landscape {
@@ -337,12 +340,12 @@ button {
   overflow: hidden;
   image-rendering: pixelated;
 }
-.moon-progress { position: absolute; top: 74px; left: 54px; display: flex; gap: 9px; }
-.orb { width: 14px; height: 14px; border: 2px solid rgba(89,255,120,.76); border-radius: 50%; image-rendering: pixelated; }
-.orb { opacity: .18; animation: orb-fill 3s steps(3, end) forwards; }
-.orb-two { animation-delay: .55s; }
-.orb-three { animation-delay: 1.1s; }
-.orb-four { animation-delay: 1.65s; }
+.moon-progress { position: absolute; top: 164px; left: 12px; display: flex; gap: 7px; }
+.orb { width: 25px; height: 25px; border: 2px solid rgba(89,255,120,.76); border-radius: 50%; image-rendering: pixelated; opacity: .12; animation: orb-fill 3s steps(4, end) forwards; }
+.orb-two { animation-delay: .45s; }
+.orb-three { animation-delay: .9s; }
+.orb-four { animation-delay: 1.35s; }
+.orb-five { animation-delay: 1.8s; }
 .orb-one { background: rgba(89,255,120,.08); }
 .orb-two { background: linear-gradient(90deg, rgba(89,255,120,.35) 50%, transparent 50%); }
 .orb-three { background: linear-gradient(90deg, rgba(89,255,120,.6) 72%, transparent 72%); }
@@ -365,15 +368,6 @@ button {
 }
 .mountain-back { left: 7px; top: 101px; width: 88px; opacity: .5; }
 .mountain-front { right: 4px; top: 112px; width: 98px; opacity: .75; transform: scale(.82); }
-.horizon {
-  position: absolute;
-  width: 130px;
-  height: 1px;
-  background-color: rgba(89, 255, 120, 0.28);
-  transform: rotate(-8deg);
-}
-.horizon-back { top: 102px; left: -13px; }
-.horizon-front { top: 109px; right: -22px; transform: rotate(6deg); }
 .water {
   position: absolute;
   height: 1px;
