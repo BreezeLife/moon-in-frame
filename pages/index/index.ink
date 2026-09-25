@@ -41,8 +41,8 @@ export default {
   data: Object.assign({
     language: 'zh', title: CONTENT.zh.title,
     startLabel: CONTENT.zh.start, phase: 'home', countdown: '3',
-    showHome: true, showCountdown: false, showFirst: false,
-    showSecond: false, showGreeting: false, moonClass: 'moonlight'
+    showHome: true, showCountdown: false, showFirst: false, showPoem: false,
+    showSecond: false, showGreeting: false, moonClass: 'moonlight', poemClass: ''
   }, poemFields(CONTENT.zh)),
 
   onLoad() {
@@ -119,8 +119,8 @@ export default {
     this.clearTimers();
     this.setData({
       phase: 'home', countdown: '3', showHome: true,
-      showCountdown: false, showFirst: false, showSecond: false,
-      showGreeting: false, moonClass: 'moonlight'
+      showCountdown: false, showFirst: false, showPoem: false, showSecond: false,
+      showGreeting: false, moonClass: 'moonlight', poemClass: ''
     });
   },
 
@@ -142,10 +142,11 @@ export default {
       countdown: '3',
       showHome: false,
       showCountdown: phase === 'countdown',
-      showFirst: phase === 'first' || phase === 'second' || phase === 'closing' || phase === 'finished',
+      showFirst: phase !== 'home',
+      showPoem: phase === 'first' || phase === 'second' || phase === 'closing',
       showSecond: phase === 'second',
       showGreeting: phase === 'closing' || phase === 'finished',
-      moonClass: phase === 'second' ? 'moonlight moonlight-glow' : 'moonlight moonlight-rise'
+      moonClass: 'moonlight moonlight-rise', poemClass: phase === 'closing' ? 'poem-fade' : ''
     });
     if (phase === 'countdown') this.tickCountdown();
     else if (PHASE_LENGTH[phase]) {
@@ -182,6 +183,10 @@ export default {
     <text class="countdown" ink:if="{{showCountdown}}">{{countdown}}</text>
 
     <view class="landscape" ink:if="{{showFirst}}">
+      <view class="moon-progress" ink:if="{{showCountdown}}">
+        <view class="orb orb-one"></view><view class="orb orb-two"></view>
+        <view class="orb orb-three"></view><view class="orb orb-four"></view>
+      </view>
       <view class="pixel-stars stars-a"></view>
       <view class="pixel-stars stars-b"></view>
       <view class="pixel-mountain mountain-back"></view>
@@ -194,7 +199,7 @@ export default {
       <view class="{{moonClass}}"></view>
     </view>
 
-    <view class="poem" ink:if="{{showFirst}}">
+    <view class="poem {{poemClass}}" ink:if="{{showPoem}}">
       <view class="poem-column first-column">
         <text class="char char-1" ink:if="{{first1_1}}">{{first1_1}}</text>
         <text class="char char-2" ink:if="{{first1_2}}">{{first1_2}}</text>
@@ -241,18 +246,18 @@ export default {
 
     <view class="closing" ink:if="{{showGreeting}}">
       <view class="poem-column greeting-column">
-        <text class="char char-1" ink:if="{{greeting1_1}}">{{greeting1_1}}</text>
-        <text class="char char-2" ink:if="{{greeting1_2}}">{{greeting1_2}}</text>
-        <text class="char char-3" ink:if="{{greeting1_3}}">{{greeting1_3}}</text>
-        <text class="char char-4" ink:if="{{greeting1_4}}">{{greeting1_4}}</text>
-        <text class="char char-5" ink:if="{{greeting1_5}}">{{greeting1_5}}</text>
-        <text class="char char-6" ink:if="{{greeting1_6}}">{{greeting1_6}}</text>
-        <text class="char char-7" ink:if="{{greeting1_7}}">{{greeting1_7}}</text>
-        <text class="char char-8" ink:if="{{greeting1_8}}">{{greeting1_8}}</text>
+        <text class="greeting-char" ink:if="{{greeting1_1}}">{{greeting1_1}}</text>
+        <text class="greeting-char" ink:if="{{greeting1_2}}">{{greeting1_2}}</text>
+        <text class="greeting-char" ink:if="{{greeting1_3}}">{{greeting1_3}}</text>
+        <text class="greeting-char" ink:if="{{greeting1_4}}">{{greeting1_4}}</text>
+        <text class="greeting-char" ink:if="{{greeting1_5}}">{{greeting1_5}}</text>
+        <text class="greeting-char" ink:if="{{greeting1_6}}">{{greeting1_6}}</text>
+        <text class="greeting-char" ink:if="{{greeting1_7}}">{{greeting1_7}}</text>
+        <text class="greeting-char" ink:if="{{greeting1_8}}">{{greeting1_8}}</text>
       </view>
       <view class="poem-column greeting-wrap">
-        <text class="char char-1" ink:if="{{greeting2_1}}">{{greeting2_1}}</text>
-        <text class="char char-2" ink:if="{{greeting2_2}}">{{greeting2_2}}</text>
+        <text class="greeting-char" ink:if="{{greeting2_1}}">{{greeting2_1}}</text>
+        <text class="greeting-char" ink:if="{{greeting2_2}}">{{greeting2_2}}</text>
         <text class="char char-3" ink:if="{{greeting2_3}}">{{greeting2_3}}</text>
         <text class="char char-4" ink:if="{{greeting2_4}}">{{greeting2_4}}</text>
         <text class="char char-5" ink:if="{{greeting2_5}}">{{greeting2_5}}</text>
@@ -332,6 +337,16 @@ button {
   overflow: hidden;
   image-rendering: pixelated;
 }
+.moon-progress { position: absolute; top: 74px; left: 54px; display: flex; gap: 9px; }
+.orb { width: 14px; height: 14px; border: 2px solid rgba(89,255,120,.76); border-radius: 50%; image-rendering: pixelated; }
+.orb { opacity: .18; animation: orb-fill 3s steps(3, end) forwards; }
+.orb-two { animation-delay: .55s; }
+.orb-three { animation-delay: 1.1s; }
+.orb-four { animation-delay: 1.65s; }
+.orb-one { background: rgba(89,255,120,.08); }
+.orb-two { background: linear-gradient(90deg, rgba(89,255,120,.35) 50%, transparent 50%); }
+.orb-three { background: linear-gradient(90deg, rgba(89,255,120,.6) 72%, transparent 72%); }
+.orb-four { background: rgba(89,255,120,.82); }
 .pixel-stars {
   position: absolute;
   width: 3px;
@@ -390,6 +405,7 @@ button {
   justify-content: center;
   align-items: flex-start;
 }
+.poem-fade { animation: poem-out 850ms ease-out forwards; }
 .second-group {
   display: flex;
   flex-direction: row-reverse;
@@ -435,9 +451,13 @@ button {
   left: 0;
   width: 190px;
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   justify-content: center;
+  opacity: 0;
+  animation: greeting-in 900ms ease-out 650ms forwards;
 }
+.closing .poem-column { width: auto; flex-direction: row; }
+.greeting-char { width: 30px; font-size: 22px; font-family: 'STXingkai', 'Xingkai SC', 'FZKai-Z03', serif; }
 .closing .char { font-size: 21px; }
 .closing .char { animation-duration: 280ms; }
 .closing .char-1 { animation-delay: 0ms; }
@@ -460,6 +480,18 @@ button {
 }
 @keyframes character-in {
   from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; }
+}
+@keyframes greeting-in {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes poem-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes orb-fill {
+  from { opacity: .18; }
   to { opacity: 1; }
 }
 @keyframes pixel-twinkle {
