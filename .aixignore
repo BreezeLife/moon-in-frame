@@ -1,4 +1,5 @@
 .git/
 .aiui-evidence/
+artifacts/
 README.md
 TESTING.md
